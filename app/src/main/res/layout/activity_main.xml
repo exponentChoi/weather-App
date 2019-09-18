@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -9,31 +10,37 @@
 
     <TextView
         android:id="@+id/txtCity"
-        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textStyle="bold"
-        android:textSize="36sp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
-        />
+        android:text=""
+        android:textSize="36sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txtLastUpdate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textStyle="bold"
-        android:textSize="18sp"
         android:gravity="center"
-        />
-    
+        android:text=""
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtCelsius"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text=""
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/imageView"
-        android:layout_gravity="center"
-        />
+        android:layout_gravity="left" />
 
     <TextView
         android:id="@+id/txtDescription"
@@ -66,12 +73,16 @@
         />
 
     <TextView
-        android:id="@+id/txtCelsius"
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:gravity="center"
-        />
+        android:layout_height="88dp"
+        android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="350dp"
+        android:layout_height="193dp"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+
 </LinearLayout>

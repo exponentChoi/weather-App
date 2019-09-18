@@ -31,8 +31,8 @@ import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
-    TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius;
-    ImageView imageView;
+    TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius,textview;
+    ImageView imageView,imageView3;
 
     LocationManager locationManager;
     String provider;
@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         txtTime = (TextView) findViewById(R.id.txtTime);
         txtCelsius = (TextView) findViewById(R.id.txtCelsius);
         imageView = (ImageView) findViewById(R.id.imageView);
-
+        textview = (TextView) findViewById(R.id.textView);
+        imageView3 = (ImageView) findViewById(R.id.imageView3);
 
         //Get Coordinates
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -179,6 +180,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             txtHumidity.setText(String.format("%d%%",openWeatherMap.getMain().getHumidity()));
             txtTime.setText(String.format("%s/%s",Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunrise()),Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunset())));
             txtCelsius.setText(String.format("%.2f °C",openWeatherMap.getMain().getTemp()));
+            if(openWeatherMap.getMain().getTemp()>=28) {
+                textview.setText("더워");
+                imageView3.setImageResource(R.mipmap.ss);
+            }
+            else if(openWeatherMap.getMain().getTemp()<28 && openWeatherMap.getMain().getTemp()>20){
+                textview.setText("선선하네");
+                imageView3.setImageResource(R.mipmap.ll);
+            }
             Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
                     .into(imageView);
