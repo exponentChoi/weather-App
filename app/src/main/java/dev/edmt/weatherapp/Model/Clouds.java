@@ -18,4 +18,8 @@ public class Clouds {
     public void setAll(int all) {
         this.all = all;
     }
+
+    public static class TransActivity {
+
+    }
 }
