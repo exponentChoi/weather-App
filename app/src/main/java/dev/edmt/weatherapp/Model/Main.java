@@ -11,6 +11,8 @@ public class Main {
     private double temp_min;
     private double temp_max;
 
+    public Main(){}
+
     public Main(double temp, double pressure, int humidity, double temp_min, double temp_max) {
         this.temp = temp;
         this.pressure = pressure;

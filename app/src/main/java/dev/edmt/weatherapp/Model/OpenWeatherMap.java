@@ -1,6 +1,10 @@
 package dev.edmt.weatherapp.Model;
 
+import android.widget.TextView;
+
 import java.util.List;
+
+import dev.edmt.weatherapp.R;
 
 /**
  * Created by reale on 05/10/2016.
@@ -19,6 +23,7 @@ public class OpenWeatherMap {
     private int id;
     private String name;
     private int cod;
+
 
     public OpenWeatherMap() {
     }
@@ -67,8 +72,7 @@ public class OpenWeatherMap {
         return main;
     }
 
-    public void setMain(Main main) {
-        this.main = main;
+    public void setMain(Main main) {    this.main = main;
     }
 
     public Wind getWind() {

@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -31,7 +33,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import dev.edmt.weatherapp.Common.Common;
 import dev.edmt.weatherapp.Helper.Helper;
@@ -44,13 +48,17 @@ import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 public class MainActivity extends AppCompatActivity implements LocationListener {
     Activity activity;
 
-    TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius,textview;
-    ImageView imageView,imageView3;
+    TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius,textview,test;
+    ImageView imageView,
+            top1,top2,bot1,bot2;
 
     LocationManager locationManager;
     String provider;
     static double lat, lng;
     OpenWeatherMap openWeatherMap = new OpenWeatherMap();
+
+
+
 
     int MY_PERMISSION = 0;
 
@@ -65,7 +73,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Cloth.class);
+                intent.putExtra("celsius",txtCelsius.getText().toString());
                 startActivity(intent);
+
             }
         });
         activity = this;
@@ -88,6 +98,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         txtCelsius = (TextView) findViewById(R.id.txtCelsius);
         imageView = (ImageView) findViewById(R.id.imageView);
         textview = (TextView) findViewById(R.id.textView);
+        top1= (ImageView) findViewById(R.id.top1);
+        top2= (ImageView) findViewById(R.id.top2);
+        bot1= (ImageView) findViewById(R.id.bottom1);
+        bot2= (ImageView) findViewById(R.id.bottom2);
         //imageView3 = (ImageView) findViewById(R.id.imageView3);
 
         //Get Coordinates
@@ -188,6 +202,44 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         lng = location.getLongitude();
 
         new GetWeather().execute(Common.apiRequest(String.valueOf(lat),String.valueOf(lng)));
+
+        Geocoder geocoder = new Geocoder(this);
+
+        List<Address> list = null;
+        try {
+
+
+            double d1 = Double.parseDouble(String.valueOf(lat));
+            double d2 = Double.parseDouble(String.valueOf(lng));
+
+
+            list = geocoder.getFromLocation(
+                    d1, // 위도
+                    d2, // 경도
+                    10); // 얻어올 값의 개수
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("test", "입출력 오류 - 서버에서 주소변환시 에러발생");
+        }
+        if (list != null) {
+            if (list.size()==0) {
+                txtCity.setText("해당되는 주소 정보는 없습니다");
+            } else {
+                txtCity.setText(list.get(0).getCountryName() +" "+   //  국가명
+                        list.get(0).getAdminArea()+" "+   // 도시명
+                        list.get(0).getLocality()+" "+ // 구
+                        list.get(0).getThoroughfare()); // 동
+                if (list.get(0).getAdminArea()==null){
+                    txtCity.setText("해당되는 주소 정보는 없습니다");
+                }
+                else if (list.get(0).getLocality()==null) {
+
+                    txtCity.setText(list.get(0).getAddressLine(0).substring(5));
+
+                }
+
+            }
+        }
     }
 
     @Override
@@ -207,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     private class GetWeather extends AsyncTask<String,Void,String>{
         ProgressDialog pd = new ProgressDialog(MainActivity.this);
-
 
         @Override
         protected void onPreExecute() {
@@ -240,23 +291,61 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             openWeatherMap = gson.fromJson(s,mType);
             pd.dismiss();
 
-            txtCity.setText(String.format("%s,%s",openWeatherMap.getName(),openWeatherMap.getSys().getCountry()));  // 지역
+
+
+           // txtCity.setText(String.format("%s,%s",openWeatherMap.getName(),openWeatherMap.getSys().getCountry()));  // 지역
             txtLastUpdate.setText(String.format("Last Updated: %s", Common.getDateNow()));  // 마지막 업데이트 정보
             txtDescription.setText(String.format("%s",openWeatherMap.getWeather().get(0).getDescription())); // 기상상태
             txtHumidity.setText(String.format("%d%%",openWeatherMap.getMain().getHumidity())); // 습도
             txtTime.setText(String.format("%s/%s",Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunrise()),Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunset()))); // 시간
-            txtCelsius.setText(String.format("%.2f °C",openWeatherMap.getMain().getTemp())); // 기온
+            txtCelsius.setText(String.format("%.1f °C",openWeatherMap.getMain().getTemp())); // 기온
 
+
+
+
+
+
+            /*if(openWeatherMap.getMain().getTemp()>=27) {
+               // textview.setText("더워");
+                top1.setImageResource(R.drawable.mtop3);
+                top2.setImageResource(R.drawable.unitop2);
+                bot1.setImageResource(R.drawable.mpants4);
+                bot2.setImageResource(R.drawable.mpants3);
+            }
+            else if(openWeatherMap.getMain().getTemp()<27 && openWeatherMap.getMain().getTemp()>=23){
+                //textview.setText("선선하네");
+                top1.setImageResource(R.drawable.unitop1);
+                top2.setImageResource(R.drawable.unitop2);
+                bot1.setImageResource(R.drawable.mpants4);
+                bot2.setImageResource(R.drawable.mpants3);
+            }*/
+
+
+            if(openWeatherMap.getMain().getTemp()<23 && openWeatherMap.getMain().getTemp()>=20) {
+                //textview.setText("선선하네");
+
+                //top1.setImageResource(R.drawable.mtop2);
+                //top2.setImageResource(R.drawable.unitop10);
+                //bot1.setImageResource(R.drawable.mpants1);
+                //bot2.setImageResource(R.drawable.mpants3);
+
+            }
             /*
-            if(openWeatherMap.getMain().getTemp()>=28) {
-                textview.setText("더워");
-                imageView3.setImageResource(R.mipmap.ss);
+            else if(openWeatherMap.getMain().getTemp()<20 && openWeatherMap.getMain().getTemp()>17){
+                //textview.setText("선선하네");
+                top1.setImageResource(R.drawable.mtop1);
+                top2.setImageResource(R.drawable.unisweater2);
+                bot1.setImageResource(R.drawable.mpants1);
+                bot2.setImageResource(R.drawable.mpants3);
             }
-            else if(openWeatherMap.getMain().getTemp()<28 && openWeatherMap.getMain().getTemp()>20){
-                textview.setText("선선하네");
-                imageView3.setImageResource(R.mipmap.ll);
-            }
-            */
+            else if(openWeatherMap.getMain().getTemp()<17 && openWeatherMap.getMain().getTemp()>12){
+                //textview.setText("선선하네");
+                top1.setImageResource(R.drawable.unijack1);
+                top2.setImageResource(R.drawable.unitop10);
+                bot1.setImageResource(R.drawable.mpants1);
+                bot2.setImageResource(R.drawable.mpants3);
+            }*/
+
             Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
                     .into(imageView);
