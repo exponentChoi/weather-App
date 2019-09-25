@@ -38,7 +38,7 @@
         android:text="↑ 현재 날씨에 맞는 옷차림을 확인해보세요!" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/trclose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

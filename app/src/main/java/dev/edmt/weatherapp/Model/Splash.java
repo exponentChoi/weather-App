@@ -31,5 +31,5 @@ public class Splash extends Activity {
     public void onBackPressed() {
        // super.onBackPressed();
 
-}
+    }
 }
