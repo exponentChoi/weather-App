@@ -27,11 +27,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -48,17 +51,16 @@ import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 public class MainActivity extends AppCompatActivity implements LocationListener {
     Activity activity;
 
-    TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius,textview,test;
+    TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius,textview;
+    TextView txtDescription2; // fake
     ImageView imageView,
             top1,top2,bot1,bot2;
+    int gender = 0;
 
     LocationManager locationManager;
     String provider;
     static double lat, lng;
     OpenWeatherMap openWeatherMap = new OpenWeatherMap();
-
-
-
 
     int MY_PERMISSION = 0;
 
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Cloth.class);
                 intent.putExtra("celsius",txtCelsius.getText().toString());
+                intent.putExtra("gender", gender);
                 startActivity(intent);
 
             }
@@ -93,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         txtCity = (TextView) findViewById(R.id.txtCity);
         txtLastUpdate = (TextView) findViewById(R.id.txtLastUpdate);
         txtDescription = (TextView) findViewById(R.id.txtDescription);
+        txtDescription2 = (TextView)findViewById(R.id.txtDescription2);
         txtHumidity = (TextView) findViewById(R.id.txtHumidity);
         txtTime = (TextView) findViewById(R.id.txtTime);
         txtCelsius = (TextView) findViewById(R.id.txtCelsius);
@@ -102,14 +106,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         top2= (ImageView) findViewById(R.id.top2);
         bot1= (ImageView) findViewById(R.id.bottom1);
         bot2= (ImageView) findViewById(R.id.bottom2);
-        //imageView3 = (ImageView) findViewById(R.id.imageView3);
 
         //Get Coordinates
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         provider = locationManager.getBestProvider(new Criteria(), false);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
 
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     Manifest.permission.INTERNET,
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             case R.id.action_bt2:
                 Toast.makeText(this, "성별 바꾸기를 눌렀습니다.", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this,Gender.class);
+                intent.putExtra("celsius",txtCelsius.getText().toString());
                 startActivity(intent);
                 return true;
 
@@ -282,69 +285,71 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(s.contains("Error: Not found city")){
+            if (s.contains("Error: Not found city")) {
                 pd.dismiss();
                 return;
             }
             Gson gson = new Gson();
-            Type mType = new TypeToken<OpenWeatherMap>(){}.getType();
-            openWeatherMap = gson.fromJson(s,mType);
+            Type mType = new TypeToken<OpenWeatherMap>() {
+            }.getType();
+            openWeatherMap = gson.fromJson(s, mType);
             pd.dismiss();
 
+            // txtCity.setText(String.format("%s,%s",openWeatherMap.getName(),openWeatherMap.getSys().getCountry()));  // 지역
+            txtLastUpdate.setText(String.format("마지막 날씨정보 업데이트 : %s", Common.getDateNow()));  // 마지막 업데이트 정보
+            //txtDescription.setText(String.format("%s",openWeatherMap.getWeather().get(0).getDescription())); // 기상상태 real
+            txtDescription2.setText(String.format("%s", openWeatherMap.getWeather().get(0).getDescription())); // 기상상태 fake
+
+            String fakeDes = txtDescription2.getText().toString().trim(); // 날씨정보 string으로 받아오기}
+
+            //  fakeDes에 넣어진 날씨 정보를 replace를 통해 한국어로 변경하는 과정
+            switch (fakeDes){
+                case "clear sky" :
+                    String replaceDes = fakeDes.replace("clear sky", "맑은 하늘");
+                    txtDescription.setText(replaceDes);
+                    break;
+                case "few clouds" :
+                    String replaceDes2 = fakeDes.replace("few clouds", "구름 조금");
+                    txtDescription.setText(replaceDes2);
+                    break;
+                case "overcast clouds" :
+                    String replaceDes3 = fakeDes.replace("overcast clouds", "흐림");
+                    txtDescription.setText(replaceDes3);
+                    break;
+                case "haze" :
+                    String replaceDes4 = fakeDes.replace("haze", "실안개");
+                    txtDescription.setText(replaceDes4);
+                    break;
+                case "mist" :
+                    String replaceDes5 = fakeDes.replace("mist", "안개");
+                    txtDescription.setText(replaceDes5);
+                    break;
+                case "moderate rain" :
+                    String replaceDes6 = fakeDes.replace("moderate rain", "비");
+                    txtDescription.setText(replaceDes6);
+                    break;
+                case "scattered clouds" :
+                    String replaceDes7 = fakeDes.replace("scattered clouds", "구름 조금");
+                    txtDescription.setText(replaceDes7);
+                    break;
+                case "broken clouds" :
+                    String replaceDes8 = fakeDes.replace("broken clouds", "드문 구름");
+                    txtDescription.setText(replaceDes8);
+                    break;
+                case "light rain" :
+                    String replaceDes9 = fakeDes.replace("light rain", "약한 비");
+                    txtDescription.setText(replaceDes9);
+                    break;
+                 default:
+                    txtDescription.setText("Error");
+                    break;
+            }
 
 
-           // txtCity.setText(String.format("%s,%s",openWeatherMap.getName(),openWeatherMap.getSys().getCountry()));  // 지역
-            txtLastUpdate.setText(String.format("Last Updated: %s", Common.getDateNow()));  // 마지막 업데이트 정보
-            txtDescription.setText(String.format("%s",openWeatherMap.getWeather().get(0).getDescription())); // 기상상태
-            txtHumidity.setText(String.format("%d%%",openWeatherMap.getMain().getHumidity())); // 습도
-            txtTime.setText(String.format("%s/%s",Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunrise()),Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunset()))); // 시간
+            txtHumidity.setText(String.format("습도 : %d%%",openWeatherMap.getMain().getHumidity())); // 습도
+            //txtTime.setText(String.format("%s/%s",Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunrise()),Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunset()))); // 시간
             txtCelsius.setText(String.format("%.1f °C",openWeatherMap.getMain().getTemp())); // 기온
 
-
-
-
-
-
-            /*if(openWeatherMap.getMain().getTemp()>=27) {
-               // textview.setText("더워");
-                top1.setImageResource(R.drawable.mtop3);
-                top2.setImageResource(R.drawable.unitop2);
-                bot1.setImageResource(R.drawable.mpants4);
-                bot2.setImageResource(R.drawable.mpants3);
-            }
-            else if(openWeatherMap.getMain().getTemp()<27 && openWeatherMap.getMain().getTemp()>=23){
-                //textview.setText("선선하네");
-                top1.setImageResource(R.drawable.unitop1);
-                top2.setImageResource(R.drawable.unitop2);
-                bot1.setImageResource(R.drawable.mpants4);
-                bot2.setImageResource(R.drawable.mpants3);
-            }*/
-
-
-            if(openWeatherMap.getMain().getTemp()<23 && openWeatherMap.getMain().getTemp()>=20) {
-                //textview.setText("선선하네");
-
-                //top1.setImageResource(R.drawable.mtop2);
-                //top2.setImageResource(R.drawable.unitop10);
-                //bot1.setImageResource(R.drawable.mpants1);
-                //bot2.setImageResource(R.drawable.mpants3);
-
-            }
-            /*
-            else if(openWeatherMap.getMain().getTemp()<20 && openWeatherMap.getMain().getTemp()>17){
-                //textview.setText("선선하네");
-                top1.setImageResource(R.drawable.mtop1);
-                top2.setImageResource(R.drawable.unisweater2);
-                bot1.setImageResource(R.drawable.mpants1);
-                bot2.setImageResource(R.drawable.mpants3);
-            }
-            else if(openWeatherMap.getMain().getTemp()<17 && openWeatherMap.getMain().getTemp()>12){
-                //textview.setText("선선하네");
-                top1.setImageResource(R.drawable.unijack1);
-                top2.setImageResource(R.drawable.unitop10);
-                bot1.setImageResource(R.drawable.mpants1);
-                bot2.setImageResource(R.drawable.mpants3);
-            }*/
 
             Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
