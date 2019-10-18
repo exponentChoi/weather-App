@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 
 import dev.edmt.weatherapp.MainActivity;
 import dev.edmt.weatherapp.R;
+import dev.edmt.weatherapp.Window;
 
 public class Splash extends Activity {
     @Override

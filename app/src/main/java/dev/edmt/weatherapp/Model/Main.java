@@ -6,14 +6,14 @@ package dev.edmt.weatherapp.Model;
 
 public class Main {
     private double temp;
-    private double pressure;
+    private float pressure;
     private int humidity;
     private double temp_min;
     private double temp_max;
 
     public Main(){}
 
-    public Main(double temp, double pressure, int humidity, double temp_min, double temp_max) {
+    public Main(double temp, float pressure, int humidity, double temp_min, double temp_max) {
         this.temp = temp;
         this.pressure = pressure;
         this.humidity = humidity;
@@ -33,7 +33,7 @@ public class Main {
         return pressure;
     }
 
-    public void setPressure(double pressure) {
+    public void setPressure(float pressure) {
         this.pressure = pressure;
     }
 

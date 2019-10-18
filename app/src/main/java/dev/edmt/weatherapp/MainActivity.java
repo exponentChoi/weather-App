@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -22,19 +21,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -42,11 +37,7 @@ import java.util.List;
 
 import dev.edmt.weatherapp.Common.Common;
 import dev.edmt.weatherapp.Helper.Helper;
-import dev.edmt.weatherapp.Model.Cloth;
-import dev.edmt.weatherapp.Model.Main;
 import dev.edmt.weatherapp.Model.OpenWeatherMap;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
     Activity activity;
@@ -55,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     TextView txtDescription2; // fake
     ImageView imageView,
             top1,top2,bot1,bot2;
+
     int gender = 0;
 
     LocationManager locationManager;
@@ -67,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //상태바 제거
         setContentView(R.layout.activity_main);
 
         Button cloth = (Button)findViewById(R.id.cloth) ;
@@ -78,7 +70,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 intent.putExtra("celsius",txtCelsius.getText().toString());
                 intent.putExtra("gender", gender);
                 startActivity(intent);
-
+            }
+        });
+        Button windowbt = (Button)findViewById(R.id.windowbt);
+        windowbt.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent2 = new Intent(MainActivity.this, Window.class);
+                intent2.putExtra("lati", lat);
+                intent2.putExtra("long", lng);
+                Log.e("lati, long", lat + ", " + lng);
+                startActivity(intent2);
             }
         });
         activity = this;
@@ -171,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
             case R.id.action_bt3:
                 Toast.makeText(this, "위치 변경하기를 눌렀습니다.", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this, Search.class);
+                startActivity(intent2);
                 return true;
                 //break;
 
@@ -201,8 +205,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
-        lat = location.getLatitude();
-        lng = location.getLongitude();
+        lat = getIntent().getDoubleExtra("lati",location.getLatitude());
+        lng = getIntent().getDoubleExtra("long", location.getLongitude());
+        Log.e("lati, long", lat+" , " + lng);
 
         new GetWeather().execute(Common.apiRequest(String.valueOf(lat),String.valueOf(lng)));
 
@@ -307,14 +312,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 case "clear sky" :
                     String replaceDes = fakeDes.replace("clear sky", "맑은 하늘");
                     txtDescription.setText(replaceDes);
+                   // windowview.setImageResource(R.drawable.qweasd);
+                    //GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(iv);
+                    //Glide.with(this).load(R.raw.qweasd).into(imageViewTarget);
                     break;
+
                 case "few clouds" :
                     String replaceDes2 = fakeDes.replace("few clouds", "구름 조금");
                     txtDescription.setText(replaceDes2);
+                   // windowview.setImageResource(R.drawable.fewclouds);
                     break;
                 case "overcast clouds" :
                     String replaceDes3 = fakeDes.replace("overcast clouds", "흐림");
                     txtDescription.setText(replaceDes3);
+                   // windowview.setImageResource(R.drawable.mist);
                     break;
                 case "haze" :
                     String replaceDes4 = fakeDes.replace("haze", "실안개");
@@ -323,30 +334,36 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 case "mist" :
                     String replaceDes5 = fakeDes.replace("mist", "안개");
                     txtDescription.setText(replaceDes5);
+                 //   windowview.setImageResource(R.drawable.mist);
                     break;
                 case "moderate rain" :
                     String replaceDes6 = fakeDes.replace("moderate rain", "비");
                     txtDescription.setText(replaceDes6);
+                 //   windowview.setImageResource(R.drawable.rain);
                     break;
                 case "scattered clouds" :
                     String replaceDes7 = fakeDes.replace("scattered clouds", "구름 조금");
                     txtDescription.setText(replaceDes7);
+                  //  windowview.setImageResource(R.drawable.fewclouds);
                     break;
                 case "broken clouds" :
                     String replaceDes8 = fakeDes.replace("broken clouds", "드문 구름");
                     txtDescription.setText(replaceDes8);
+                 //   windowview.setImageResource(R.drawable.fewclouds);
                     break;
                 case "light rain" :
                     String replaceDes9 = fakeDes.replace("light rain", "약한 비");
                     txtDescription.setText(replaceDes9);
+                   // windowview.setImageResource(R.drawable.rain);
                     break;
-                 default:
+                default:
                     txtDescription.setText("Error");
                     break;
             }
 
 
-            txtHumidity.setText(String.format("습도 : %d%%",openWeatherMap.getMain().getHumidity())); // 습도
+
+            //txtHumidity.setText(String.format("습도 : %d%%",openWeatherMap.getMain().getHumidity())); // 습도
             //txtTime.setText(String.format("%s/%s",Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunrise()),Common.unixTimeStampToDateTime(openWeatherMap.getSys().getSunset()))); // 시간
             txtCelsius.setText(String.format("%.1f °C",openWeatherMap.getMain().getTemp())); // 기온
 

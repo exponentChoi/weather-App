@@ -8,9 +8,11 @@
         <item name="colorPrimary">#FFFFE4C4</item>
         <item name="colorPrimaryDark">#FFFFE4C4</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="color">@android:color/black</item>
         <!-- No Title Bar-->
-        <item name = "windowActionBar">true</item>
-        <item name = "windowNoTitle">true</item>"
+        <item name = "windowActionBar">false</item>
+        <item name = "windowNoTitle">true</item>
     </style>
 
     <style name="Transparent" parent="@style/Theme.AppCompat">
@@ -31,6 +33,21 @@
         <item name="android:backgroundDimEnabled">true</item>
         <!-- No Title Bar-->
         <item name = "windowActionBar">true</item>
+    </style>
+    
+    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#FFFFE4C4</item>
+        <item name="colorPrimaryDark">#FFFFE4C4</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="color">@android:color/black</item>
+
     </style>
 
 </resources>

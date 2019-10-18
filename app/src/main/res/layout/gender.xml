@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gender">
+    android:background="@drawable/gengerbackground">
 
     <!--
     <ImageView
@@ -17,22 +17,36 @@
         app:srcCompat="@drawable/gender" />
         -->
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+    </android.support.v7.widget.Toolbar>
+
     <Button
-        android:id="@+id/im_bt"
+        android:id="@+id/bt_female"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:layout_marginStart="212dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginStart="252dp"
+        android:layout_marginTop="196dp"
         android:background="@drawable/female"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/bt_male"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="156dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="196dp"
         android:background="@drawable/male"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

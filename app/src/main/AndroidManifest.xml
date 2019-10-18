@@ -33,11 +33,17 @@
         <activity android:name=".Gender">
 
         </activity>
-        <activity android:name=".Model.Cloth"></activity>
+        <activity android:name=".Cloth"></activity>
         <activity android:name=".MainActivity">
 
-
         </activity>
+
+        <activity android:name=".Window"
+            android:theme="@style/MyMaterialTheme">
+        </activity>
+
+        <activity android:name=".Search"></activity>
+
     </application>
 
 </manifest>
